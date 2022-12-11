@@ -4,8 +4,15 @@ import com.cos.blog.model.RoleType;
 import com.cos.blog.model.User;
 import com.cos.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+import java.util.List;
 import java.util.function.Supplier;
 
 @RestController
@@ -20,6 +27,37 @@ public class DummyControllerTest {
 //    public String join(String username, String password, String email){
 //        return "회원가입 완료";
 //    }
+
+
+    // save함수는 id를 전달하지 않으면 insert
+    // id를 전달하면 해당 id에 대한 데이터가 있으면 update 데이터가 없으면 insert
+
+    @DeleteMapping("/dummy/user/{id}")
+    public String delete(@PathVariable int id){
+        try{
+            userRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e){
+            return "없는 id라서 삭제 실패";
+        }
+
+
+        return "id : "+id + " 삭제 되었습니다.";
+    }
+
+    @Transactional //함수 종료시 자동 commit
+    @PutMapping("/dummy/user/{id}")
+    public User updateUser(@PathVariable int id,@RequestBody User requestUser){
+
+        User user = userRepository.findById(id).orElseThrow(()-> {
+            return new IllegalArgumentException("수정에 실패하였습니다..");
+        });
+
+        user.setPassword(requestUser.getPassword());
+        user.setEmail(requestUser.getEmail());
+
+//        userRepository.save(requestUser);
+        return user;
+    }
     @PostMapping("/dummy/join")
     public String join(User user){
         user.setRoles(RoleType.USER);
@@ -27,6 +65,21 @@ public class DummyControllerTest {
         return "회원가입 완료";
     }
 
+    @GetMapping("/dummy/users")
+    public List<User> list(){
+        return userRepository.findAll();
+    }
+
+    // 한 페이지 당 2건의 데이터를 리턴 (폐이징)
+    @GetMapping("/dummy/user")
+    public List<User> pageList(@PageableDefault(size = 2,sort = "id",direction = Sort.Direction.DESC)Pageable pageable){
+        Page<User> pagingUser =userRepository.findAll(pageable);
+        List<User> users =pagingUser.getContent();
+
+        // pagingUser.isFirst() , pagingUser.isLast()
+
+        return users;
+    }
     // {id}주소로 파라미터를 전달받을 수 있음
 //    @GetMapping("/dummy/user/{id}")
 //    public User detail(@PathVariable int id){
@@ -59,4 +112,6 @@ public class DummyControllerTest {
         // user 오브젝트를 json으로 변환해서 브라우저에게 던져준다.
         return user;
     }
+
+
 }

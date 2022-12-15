@@ -3,6 +3,10 @@ let index = {
         $("#btn-save").on("click",()=>{ // 화살표함수 쓰는 이유는 this를 바인딩하기 위해서
             this.save();
         });
+        $("#btn-login").on("click",()=>{
+            this.login();
+        });
+
     },
 
     save:function(){
@@ -28,7 +32,26 @@ let index = {
         }).fail(function(error){
             alert(JSON.stringify(error));
         });
-    }
+    },
+
+    login:function(){
+            let data = {
+                username: $("#username").val(),
+                password: $("#pwd").val()
+            };
+
+            $.ajax({
+                type:"POST",
+                url:"/blog/api/user/login",
+                data: JSON.stringify(data), //http body 데이터
+                contentType: "application/json; charset=utf-8",
+            }).done(function(resp){
+                alert("로그인 완료되었습니다.");
+                location.href = "/blog";
+            }).fail(function(error){
+                alert(JSON.stringify(error));
+            });
+        }
 }
 
 index.init();

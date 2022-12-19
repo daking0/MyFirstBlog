@@ -23,16 +23,12 @@ public class UserApiController {
 //    @Autowired
 //    private HttpSession session;
 
-    @PostMapping("/api/joinProc")
+    @PostMapping("/auth/joinProc")
     public ResponseDto<Integer> save(@RequestBody User user) {
         user.setRoles(RoleType.USER);
         userService.회원가입(user);
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
 
-        // 실제로 db에 insert를 하고 아래에서 return 되면 된다,
-//        user.setRoles(RoleType.USER);
-//        int result = userService.회원가입(user);
-//        return new ResponseDto<Integer>(HttpStatus.OK,result); //자바오브젝트를 json으로 리턴해줌(jackson
     }
 
 

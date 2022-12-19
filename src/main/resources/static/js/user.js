@@ -3,10 +3,6 @@ let index = {
         $("#btn-save").on("click",()=>{ // 화살표함수 쓰는 이유는 this를 바인딩하기 위해서
             this.save();
         });
-        $("#btn-login").on("click",()=>{
-            this.login();
-        });
-
     },
 
     save:function(){
@@ -22,7 +18,7 @@ let index = {
         // ajax가 통신을 성공하고 json을 리턴해주면 자동으로 자바 오브젝트로 변환해줌
         $.ajax({
             type:"POST",
-            url:"/api/user",
+            url:"/auth/joinProc",
             data: JSON.stringify(data), //http body 데이터
             contentType: "application/json; charset=utf-8", // body데이터가 어떤 타입인지(MIME)
 //            dataType:"json" // 요청을 서버로해서 응답 왔을 때 기본적으로 모든 것이 문자열인데, 생긴게 JSON이라면 => javascript object로 변경해줌
@@ -32,26 +28,7 @@ let index = {
         }).fail(function(error){
             alert(JSON.stringify(error));
         });
-    },
-
-    login:function(){
-            let data = {
-                username: $("#username").val(),
-                password: $("#pwd").val()
-            };
-
-            $.ajax({
-                type:"POST",
-                url:"/api/user/login",
-                data: JSON.stringify(data), //http body 데이터
-                contentType: "application/json; charset=utf-8",
-            }).done(function(resp){
-                alert("로그인 완료되었습니다.");
-                location.href = "/";
-            }).fail(function(error){
-                alert(JSON.stringify(error));
-            });
-        }
+    }
 }
 
 index.init();

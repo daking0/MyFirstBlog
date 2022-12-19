@@ -18,11 +18,6 @@ public class UserApiController {
     @Autowired
     private UserService userService;
 
-    // HttpSession session 은 import해서도 사용할 수 있고
-    // or @Autowired로 받아올 수도 있다(이 경우에는 param에 작성 안해도 사용 가능)
-//    @Autowired
-//    private HttpSession session;
-
     @PostMapping("/auth/joinProc")
     public ResponseDto<Integer> save(@RequestBody User user) {
         user.setRoles(RoleType.USER);

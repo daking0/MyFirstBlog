@@ -27,8 +27,8 @@ public class Board {
     @Lob //대용량 데이터에 사용
     private String content;
 
+
     // 조회수
-    @ColumnDefault("0")
     private int count;
 
     @OneToMany(mappedBy = "board",fetch = FetchType.EAGER)

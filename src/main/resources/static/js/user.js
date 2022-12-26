@@ -3,8 +3,10 @@ let index = {
         $("#btn-save").on("click",()=>{ // 화살표함수 쓰는 이유는 this를 바인딩하기 위해서
             this.save();
         });
+        $("#btn-update").on("click",()=>{ // 화살표함수 쓰는 이유는 this를 바인딩하기 위해서
+            this.update();
+        });
     },
-
     save:function(){
 
         let data = {
@@ -28,7 +30,28 @@ let index = {
         }).fail(function(error){
             alert(JSON.stringify(error));
         });
-    }
+    },
+
+    update:function(){
+
+            let data = {
+                id:$("#id").val(),
+                username:$("#username").val(),
+                password: $("#pwd").val(),
+                email: $("#email").val()
+            };
+            $.ajax({
+                type:"PUT",
+                url:"/user",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+            }).done(function(resp){
+                alert("회원정보 수정이 완료되었습니다.");
+                location.href = "/";
+            }).fail(function(error){
+                alert(JSON.stringify(error));
+            });
+        }
 }
 
 index.init();
